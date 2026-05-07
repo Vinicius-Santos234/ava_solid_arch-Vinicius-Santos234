@@ -42,13 +42,15 @@ Concluímos a avaliação referente a criação, controle e adoção de Pets nes
 ## O que será implementado
 ### 1. Rotas de Pets (PetRoutes.js)
 Configuramos todas as rotas listadas na tarefa para dar suporte à manipulação de Pets, associadas ao PetController. Importamos os middlewares adequados para segurança (Validação de Token) e funcionalidades adicionais (Upload Múltiplo de Imagens).
+<img width="670" height="602" alt="image" src="https://github.com/user-attachments/assets/c0aae8ce-b8a0-469c-b739-d20526651aca" />
 
 ### 2. Integração no Servidor (index.js)
 Adicionamos o módulo de rotas PetRoutes no servidor Express (index.js), sob o endpoint /pets.
+<img width="539" height="460" alt="image" src="https://github.com/user-attachments/assets/f1649a4b-3ed9-4ebf-9bc6-99fc59627e51" />
 
 ### 3. Controlador de Pets (PetController.js)
 Implementamos todos os métodos do CRUD, bem como a lógica de adoções (onde aplicável):
-
+[Esta parte deixo com vocês!!]
 create: Realiza validações (obrigando campos como name, age, weight, color), vincula as imagens e também o usuário autenticado que está realizando o cadastro. Salva o status do Pet automaticamente como available: true.
 getAll: Resgata todos os Pets ordenados por data de criação (-createdAt).
 getAllUserPets e getAllUserAdoptions: Filtram os pets onde o usuário logado é o respectivo dono (user._id) ou o adotante da visita agendada (adopter._id).
