@@ -1,6 +1,7 @@
 const Pet = require('../models/Pet');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const ObjectId = require('mongoose').Types.ObjectId;
 
 const getToken = require('../helpers/get-token');
 const getUserByToken = require('../helpers/get-user-by-token');
@@ -63,7 +64,8 @@ module.exports = class PetController {
         }
     }
     static async getAll(req, res) {
-        res.status(200).json({ message: 'em breve...' });
+        const pets = await Pet.find().sort('-createdAt');
+        res.status(200).json({ pets: pets });
     }
     static async getAllUserPets(req, res) {
         res.status(200).json({ message: 'em breve...' });
