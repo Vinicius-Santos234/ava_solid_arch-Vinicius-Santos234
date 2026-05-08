@@ -193,10 +193,72 @@ module.exports = class PetController {
         
     }
     static async schedule(req, res) {
-        res.status(200).json({ message: 'em breve...' });
+        const id = req.params.id;
+
+        if (!ObjectId.isValid(id)) {
+            res.status(422).json({ message: 'ID inválido!' });
+            return;
+        }
+
+        const pet = await Pet.findOne({ _id: id });
+
+        if (!pet) {
+            res.status(404).json({ message: 'Pet não encontrado!' });
+            return;
+        }
+
+        const token = getToken(req);
+        const user = await getUserByToken(token);
+
+        if (pet.user._id.equals(user._id)) {
+            res.status(422).json({ message: 'Você não pode agendar uma visita para seu próprio pet!' });
+            return;
+        }
+
+        if (pet.adopter && pet.adopter.id && pet.adopter.id.equals(user._id)) {
+            res.status(422).json({ message: 'Você não pode agendar uma visita para um pet que já está adotado!' });
+            return;
+        }
+
+        pet.adopter = {
+            id: user._id,
+            name: user.name,
+            image: user.image,
+            phone: user.phone,
+        };
+
+        await Pet.findByIdAndUpdate(id, pet);
+
+        res.status(200).json({ message: `Visita agendada com sucesso, entre em contato com ${pet.user.name} pelo telefone ${pet.user.phone} para combinar a visita!` });
     }
     static async concludeAdoption(req, res) {
-        res.status(200).json({ message: 'em breve...' });
+        const id = req.params.id;
+
+        if (!ObjectId.isValid(id)) {
+            res.status(422).json({ message: 'ID inválido!' });
+            return;
+        }
+
+        const pet = await Pet.findOne({ _id: id });
+
+        if (!pet) {
+            res.status(404).json({ message: 'Pet não encontrado!' });
+            return;
+        }
+
+        const token = getToken(req);
+        const user = await getUserByToken(token);
+
+        if (pet.user._id.toString() !== user._id.toString()) {
+            res.status(422).json({ message: 'Ocorreu um erro, tente novamente mais tarde!' });
+            return;
+        }
+
+        pet.available = false;
+
+        await Pet.findByIdAndUpdate(id, pet);
+
+        res.status(200).json({ message: 'Parabéns! O ciclo de adoção foi concluído com sucesso!' });
     }
 };
        
